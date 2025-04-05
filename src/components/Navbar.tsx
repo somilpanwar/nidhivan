@@ -11,20 +11,17 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { FaBars } from 'react-icons/fa';
-
-
+import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
 
 const Navbar = () => {
- 
-
-
+  const { isSignedIn, user } = useUser();
 
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex justify-between items-center w-full sm:justify-start">
-            <div className="flex-shrink-0 flex items-center">
+        <div className="flex justify-between h-16 items-center">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
               <Image src="/image/logo.png" alt="Logo" width={120} height={120} />
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
@@ -35,7 +32,7 @@ const Navbar = () => {
                 to="garden-photos"
                 smooth={true}
                 duration={500}
-                className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium cursor-pointer"
               >
                 Explore
               </ScrollLink>
@@ -46,42 +43,74 @@ const Navbar = () => {
                 Contact Us
               </Link>
             </div>
+          </div>
 
+          <div className="hidden sm:flex items-center">
+            {isSignedIn ? (
+              <Link href="/profile" className="text-black hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                {user.firstName || 'Profile'}
+              </Link>
+            ) : (
+              <>
+                <SignInButton mode="modal">
+                  <button className="text-black hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                    Sign In
+                  </button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-md text-sm font-medium ml-2">
+                    Sign Up
+                  </button>
+                </SignUpButton>
+              </>
+            )}
+          </div>
           <div className='sm:hidden'>
-
-            <Sheet >
+            <Sheet>
               <SheetTrigger>
-              <FaBars className="text-black"  />
+                <FaBars className="text-black" />
               </SheetTrigger>
-              <SheetContent className='bg-amber-100 '>
+              <SheetContent className='bg-amber-100'>
                 <SheetHeader>
                   <SheetTitle>
                     <p className='text-yellow-400 font-bold text-xl'>NIDHIVAN</p>
                   </SheetTitle>
-                  
-                    <div className="flex flex-col space-y-4 mt-4">
-
+                  <div className="flex flex-col space-y-4 mt-4">
                     <Link href="/" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                       Home
                     </Link>
-                  
                     <Link href="/plans" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                       Plans
                     </Link>
                     <Link href="/contact" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                       Contact Us
                     </Link>
-                    </div>
-                  
+                    {isSignedIn ? (
+                      <Link href="/profile" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                        Profile
+                      </Link>
+                    ) : (
+                      <>
+                        <SignInButton mode="modal">
+                          <button className="text-black hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            Sign In
+                          </button>
+                        </SignInButton>
+                        <SignUpButton mode="modal">
+                          <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-md text-sm font-medium">
+                            Sign Up
+                          </button>
+                        </SignUpButton>
+                      </>
+                    )}
+                  </div>
                 </SheetHeader>
               </SheetContent>
             </Sheet>
           </div>
-
-          </div>
         </div>
       </div>
-    </nav >
+    </nav>
   )
 }
 
