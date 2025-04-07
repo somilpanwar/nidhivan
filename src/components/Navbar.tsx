@@ -39,9 +39,14 @@ const Navbar = () => {
               <Link href="/plans" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                 Plans
               </Link>
-              <Link href="/contact" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                Contact Us
-              </Link>
+              <ScrollLink
+                to="footer"
+                smooth={true}
+                duration={1000}
+                className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium cursor-pointer"
+              >
+               Contact us
+              </ScrollLink>
             </div>
           </div>
 

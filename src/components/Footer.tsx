@@ -1,9 +1,12 @@
+import Image from "next/image"
+
 
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white">
+    <footer className="bg-gray-800 text-white" id="footer">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+        <Image src="/image/logo.png" alt="Logo" width={120} height={120} className=" mb-6" />
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="grid grid-cols-2 gap-8 xl:col-span-2">
             <div className="md:grid md:grid-cols-2 md:gap-8">
@@ -35,7 +38,8 @@ const Footer = () => {
             <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Location</h3>
             <div className="mt-4">
               {/* Replace with actual Google Maps embed */}
-              <div className="bg-gray-700 h-48 w-full"></div>
+              <div className="bg-gray-700 h-48 w-full">
+              </div>
             </div>
           </div>
         </div>
