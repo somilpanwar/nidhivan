@@ -11,10 +11,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { FaBars } from 'react-icons/fa';
-import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 
 const Navbar = () => {
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn} = useUser();
 
   return (
     <nav className="bg-white shadow-md">
@@ -53,7 +53,7 @@ const Navbar = () => {
           <div className="hidden sm:flex items-center">
             {isSignedIn ? (
               <Link href="/profile" className="text-black hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">
-                {user.firstName || 'Profile'}
+               <UserButton />
               </Link>
             ) : (
               <>
