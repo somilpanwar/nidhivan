@@ -1,12 +1,10 @@
 import Image from "next/image";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Hero from "../components/Hero";
 
 export default function Home() {
   return (
     <div className="flex flex-col bg-white min-h-screen">
-      <Navbar />
       <main className="flex-col gap-5">
         <Hero />
 
