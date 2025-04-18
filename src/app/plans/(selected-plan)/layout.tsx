@@ -10,6 +10,7 @@ import { Calendar as CalendarIcon } from "lucide-react"
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,6 +23,7 @@ const geistMono = Geist_Mono({
 
 export default function PlanLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   const [date, setDate] = useState<Date | undefined>()
+  const [reqSend, setreqSend] = useState(false);
   const { user } = useUser()
   const phoneNumber =Number( user?.phoneNumbers?.[0]?.phoneNumber.replace('+',' '));
   const name = user?.fullName;
@@ -46,7 +48,13 @@ export default function PlanLayout({ children, }: Readonly<{ children: React.Rea
     })
   }, [user])
   
-
+const bookedDates = [
+  new Date(2025, 3, 10),
+  new Date(2025, 3, 11),
+  new Date(2025, 3, 12),
+  new Date(2025, 3, 20),
+  new Date(2025, 3, 21),
+]
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     //    we are using this to set the value acc to there name
@@ -61,14 +69,16 @@ export default function PlanLayout({ children, }: Readonly<{ children: React.Rea
     e.preventDefault()
     // Here you would typically send the data to your backend
     console.log({ ...formData, date })
+    toast.success("Request Sent Successfully!")
+    setreqSend(true);
   }
   return (
 
     <div
-      className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col-reverse  md:flex-row-reverse  items-start justify-between px-4 md:px-12 py-8 gap-10`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col   md:flex-row-reverse  items-center justify-between px-4 md:px-12 py-8 gap-5 gap-y-10 md:gap-y-0`}
     >
       {/* Form Section */}
-      <div className="w-full mt-5 md:w-1/2">
+      <div className="w-full mt-10 md:w-1/2  p-2">
         <h2 className="text-2xl font-bold mb-4">User Details</h2>
         <form onSubmit={handleSubmit} className="space-y-4 w-full">
           <Input
@@ -129,12 +139,27 @@ export default function PlanLayout({ children, }: Readonly<{ children: React.Rea
                 selected={date}
                 onSelect={setDate}
                 initialFocus
+                modifiers={
+                  {
+                    booked:bookedDates,
+                  }
+                }
+                disabled={[bookedDates]}
+                modifiersClassNames={
+                  {
+                    booked: "bg-red-500 text-white ",
+                  }
+                }
+                
               />
             </PopoverContent>
           </Popover>
-          <Button type="submit" className="ml-4" onClick={()=>{toast.success("Request Sent!")}}>
-            Send Request
+          <Button type="submit" className={cn("ml-4 transition delay-75 duration-100 ease-in-out ",{"bg-green-500":reqSend})}>
+            {reqSend ? "Slot Requested" : "Request a Slot"}
           </Button>
+          {reqSend && <Button variant="destructive" className="ml-4 transition delay-150 duration-300 ease-in-out" onClick={() => { setreqSend(false); toast.error("Request Cancelled!") }}>
+               cancel Request
+            </Button>}
         </form>
       </div>
 
