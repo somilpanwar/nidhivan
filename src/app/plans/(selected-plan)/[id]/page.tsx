@@ -7,7 +7,7 @@ import { FaCheck } from 'react-icons/fa';
 
 const Plans = () => {
     const { id } = useParams()
-    const plan = plans.find(p => p.id === parseInt(id));
+    const plan = plans.find(p => p.id === parseInt(id as string));
 
 
     return <>

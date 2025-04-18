@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
 
@@ -42,7 +42,7 @@ const PlansPage = () => {
               </div>
               <div className="p-6 flex flex-col gap-3">
                 <h3 className="text-2xl font-semibold text-gray-800 mb-2">{plan.title}</h3>
-                <p className="text-gray-600 italic">"{plan.testimonial.text}"</p>
+                <p className="text-gray-600 italic">&quot;{plan.testimonial.text}&quot;</p>
                 <p className={cn("text-3xl font-bold text-yellow-500 mb-4")}>{plan.price}</p>
                 <ul className="text-gray-600 mb-6">
                   {plan.features.map((feature, i) => (

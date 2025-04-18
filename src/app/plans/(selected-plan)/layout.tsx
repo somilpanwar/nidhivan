@@ -46,7 +46,7 @@ export default function PlanLayout({ children, }: Readonly<{ children: React.Rea
       guestCount: '',
       email: email || '',
     })
-  }, [user])
+  }, [user,email,phoneNumber,name])
   
 const bookedDates = [
   new Date(2025, 3, 10),
