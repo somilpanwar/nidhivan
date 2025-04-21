@@ -22,14 +22,7 @@ const PlansPage = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="relative h-96">
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <video 
-        className="w-full h-full object-center"
-        src="/video/intro.mp4" 
-        autoPlay 
-        muted 
-        loop 
-        playsInline
-      />
+        <DynamicImage src={"/images/image1.png"} alt="Hero Image" width={2000} height={800} className="object-cover h-full w-full" />
         </div>
       </div>
 

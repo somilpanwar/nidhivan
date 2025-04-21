@@ -1,7 +1,10 @@
-import Image from "next/image";
+"use client"
+import dynamic from "next/dynamic";
 import Footer from "../components/Footer";
 import Hero from "../components/Hero";
 
+const Image = dynamic(() => import("next/image"), { ssr: false });
+const Gallery = dynamic(() => import ("../components/CircularGallery"), { ssr: false });
 export default function Home() {
   return (
     <div className="flex flex-col bg-white min-h-screen">
@@ -9,7 +12,7 @@ export default function Home() {
         <Hero />
 
         {/* Photo Section */}
-        <section id="garden-photos" className="py-12 bg-yellow-100">
+        <section id="garden-photos" className="hidden sm:block py-12 bg-yellow-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-extrabold text-yellow-400 mb-8">Our Beautiful Garden</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -21,11 +24,16 @@ export default function Home() {
                 <Image src="/image/img2.jpg" alt="Garden 2" width={400} height={300} className="w-full h-64 object-cover" />
               </div>
               <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                <Image src="/image/img3.jpeg" alt="Garden 3" width={400} height={300} className="w-full h-64 object-cover" />
+                <Image src="/image/img3.jpg" alt="Garden 3" width={400} height={300} className="w-full h-64 object-cover" />
               </div>
             </div>
           </div>
+
         </section>
+          <div id="garder-photos" style={{ height: '600px', position: 'relative' }} className="block sm:hidden sm:bg-red-400">
+            <Gallery/>
+          </div>
+
 
         {/* Previous Events Section */}
         <section className="py-12 bg-yellow-300 mt-20">

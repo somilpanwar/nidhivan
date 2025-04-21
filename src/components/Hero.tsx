@@ -1,6 +1,8 @@
-import Image from 'next/image'
+"use client"
 import Link from 'next/link'
+import dynamic from 'next/dynamic';
 
+const DynamicImage = dynamic(() => import('next/image'), { ssr: false });
 const Hero = () => {
   return (
     <div className="relative bg-white overflow-hidden ">
@@ -28,7 +30,7 @@ const Hero = () => {
           </main>
         </div>
         <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-          <Image
+          <DynamicImage
             className="h-56 w-full object-cover mt-5 sm:h-72 sm:mt-5 md:h-96 lg:w-full lg:h-full"
             src="/image/image1.png"
             alt="Wedding Garden"
