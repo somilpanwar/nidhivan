@@ -120,3 +120,16 @@
     @apply bg-background text-foreground;
   }
 }
+.cl-internal-4x6jej{
+  display: none;
+}
+.cl-internal-1odp14a {
+  background-color: rgb(245, 222, 18);
+  border: none;
+  color: black;
+  font-weight: 700;
+  font-style:Bold;
+  }
+.cl-internal-1odp14a:hover {
+  background-color: rgb(243, 226, 77);
+}

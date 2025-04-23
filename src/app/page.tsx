@@ -12,12 +12,15 @@ export default function Home() {
         <Hero />
 
         {/* Photo Section */}
-        <section id="garden-photos" className="hidden sm:block py-12 bg-yellow-100">
+        <section id="garden-photos" className=" py-12 bg-yellow-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-extrabold text-yellow-400 mb-8">Our Beautiful Garden</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div id="garder-photos" style={{ height: '600px', position: 'relative' }} className="block sm:hidden sm:bg-red-400">
+            <Gallery/>
+          </div>
+            <div className="hidden sm:grid  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Add your garden photos here */}
-              <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="bg-white rounded-lg shadow-md overflow-hidden ">
                 <Image src="/image/image.png" alt="Garden 1" width={400} height={300} className="w-full h-64 object-cover" />
               </div>
               <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -30,9 +33,6 @@ export default function Home() {
           </div>
 
         </section>
-          <div id="garder-photos" style={{ height: '600px', position: 'relative' }} className="block sm:hidden sm:bg-red-400">
-            <Gallery/>
-          </div>
 
 
         {/* Previous Events Section */}

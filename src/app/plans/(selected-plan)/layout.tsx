@@ -22,15 +22,16 @@ const geistMono = Geist_Mono({
 });
 
 export default function PlanLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
-  const [date, setDate] = useState<Date | undefined>()
+  const [startingDate, setStartingdate] = useState<Date | undefined>()
+  const [endingDate, setEndingdate] = useState<Date | undefined>()
   const [reqSend, setreqSend] = useState(false);
   const { user } = useUser()
-  const phoneNumber =Number( user?.phoneNumbers?.[0]?.phoneNumber.replace('+',' '));
+  const phoneNumber = Number(user?.phoneNumbers?.[0]?.phoneNumber.replace('+91', ' '));
   const name = user?.fullName;
   const email = user?.emailAddresses?.[0]?.emailAddress;
   const [formData, setFormData] = useState({
     name: name || '',
-    number:  phoneNumber|| '',
+    number: phoneNumber || '',
     address: '',
     eventDetail: '',
     guestCount: '',
@@ -46,15 +47,15 @@ export default function PlanLayout({ children, }: Readonly<{ children: React.Rea
       guestCount: '',
       email: email || '',
     })
-  }, [user,email,phoneNumber,name])
-  
-const bookedDates = [
-  new Date(2025, 3, 10),
-  new Date(2025, 3, 11),
-  new Date(2025, 3, 12),
-  new Date(2025, 3, 20),
-  new Date(2025, 3, 21),
-]
+  }, [user, email, phoneNumber, name])
+
+  const bookedDates = [
+    new Date(2025, 3, 10),
+    new Date(2025, 3, 11),
+    new Date(2025, 3, 12),
+    new Date(2025, 3, 20),
+    new Date(2025, 3, 21),
+  ]
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     //    we are using this to set the value acc to there name
@@ -68,7 +69,7 @@ const bookedDates = [
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // Here you would typically send the data to your backend
-    console.log({ ...formData, date })
+    console.log({ ...formData, from: startingDate, to: endingDate })
     toast.success("Request Sent Successfully!")
     setreqSend(true);
   }
@@ -80,7 +81,7 @@ const bookedDates = [
       {/* Form Section */}
       <div className="w-full mt-10 md:w-1/2  p-2">
         <h2 className="text-2xl font-bold mb-4">User Details</h2>
-        <form onSubmit={handleSubmit} className="space-y-4 w-full">
+        <form onSubmit={handleSubmit} className="space-y-4 w-full flex flex-col items-center">
           <Input
             name="name"
             placeholder="Full Name"
@@ -93,6 +94,7 @@ const bookedDates = [
             type="tel"
             placeholder="Phone Number"
             value={formData.number}
+             pattern="[0-9]{10}"
             onChange={handleInputChange}
             required
           />
@@ -126,40 +128,80 @@ const bookedDates = [
             onChange={handleInputChange}
             required
           />
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline">
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? format(date, "PPP") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                initialFocus
-                modifiers={
-                  {
-                    booked:bookedDates,
+          <div>
+
+            <span className="font-bold ">From - </span>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {startingDate ? format(startingDate, "PPP") : <span>Pick a start date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+
+                <Calendar
+                  mode="single"
+                  selected={startingDate}
+                  onSelect={setStartingdate}
+                  initialFocus
+                  modifiers={
+                    {
+                      booked: bookedDates,
+                    }
                   }
-                }
-                disabled={[bookedDates]}
-                modifiersClassNames={
-                  {
-                    booked: "bg-red-500 text-white ",
+                  disabled={bookedDates}
+                  modifiersClassNames={
+                    {
+                      booked: "bg-red-500 text-white ",
+                    }
                   }
-                }
-                
-              />
-            </PopoverContent>
-          </Popover>
-          <Button type="submit" className={cn("ml-4 transition delay-75 duration-100 ease-in-out ",{"bg-green-500":reqSend})}>
-            {reqSend ? "Slot Requested" : "Request a Slot"}
-          </Button>
-          {reqSend && <Button variant="destructive" className="ml-4 transition delay-150 duration-300 ease-in-out" onClick={() => { setreqSend(false); toast.error("Request Cancelled!") }}>
-               cancel Request
+
+                />
+              </PopoverContent>
+            </Popover>
+
+            <span className="font-bold"> To - </span>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {endingDate ? format(endingDate, "PPP") : <span>Pick a end date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+
+                <Calendar
+                  mode="single"
+                  selected={endingDate}
+                  onSelect={setEndingdate}
+                  initialFocus
+                  modifiers={
+                    {
+                      booked: bookedDates,
+                    }
+                  }
+                  disabled={bookedDates}
+                  modifiersClassNames={
+                    {
+                      booked: "bg-red-500 text-white ",
+                    }
+                  }
+
+                />
+              </PopoverContent>
+            </Popover>
+
+          </div>
+          <div className="flex gap-3">
+
+            <Button type="submit" className={cn("ml-4  transition delay-75 duration-100 ease-in-out ", { "bg-green-500": reqSend })}>
+              {reqSend ? "Slot Requested" : "Request a Slot"}
+            </Button>
+            {reqSend && <Button variant="destructive" className="ml-4 transition delay-150 duration-300 ease-in-out" onClick={() => { setreqSend(false); toast.error("Request Cancelled!") }}>
+              cancel Request
             </Button>}
+          </div>
         </form>
       </div>
 
