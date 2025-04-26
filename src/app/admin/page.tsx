@@ -8,9 +8,11 @@ import {
 } from "@/components/ui/card"
 
 import { Calendar } from "@/components/ui/calendar";
+import User_req from "@/components/User_req";
 
 
 const Dashboard = () => {
+ 
 
 
   return (
@@ -55,9 +57,8 @@ const Dashboard = () => {
             </div>
 
 
-        <div className="border-2 border-amber-300 w-full rounded-lg h-full p-4">
-
-          requst section 
+        <div className="border-2 border-amber-300 w-full rounded-xl h-full ">
+          <User_req />
         </div>
         </div>
       </div>

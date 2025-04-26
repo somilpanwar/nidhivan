@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -66,10 +67,17 @@ export default function PlanLayout({ children, }: Readonly<{ children: React.Rea
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault()
     // Here you would typically send the data to your backend
-    console.log({ ...formData, from: startingDate, to: endingDate })
+   const res =  await fetch('http://localhost:5000/userReq', {
+      method:'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...formData, from: startingDate, to: endingDate })
+    })
+
     toast.success("Request Sent Successfully!")
     setreqSend(true);
   }
