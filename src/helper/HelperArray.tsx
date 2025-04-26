@@ -26,7 +26,7 @@ export const plans = [
       title: "Grand Affair",
       price: "$2999",
       features: ["Up to 200 guests", "Full-day venue rental", "Luxury decor", "Full-service planning", "Premium catering", "Photography"],
-      image: "/image/img3.jpeg",
+      image: "/image/img3.jpg",
       testimonial: {
         text: "Our Grand Affair wedding was truly magical. Every detail was perfect!",
         author: "Jessica & David"

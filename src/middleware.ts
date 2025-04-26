@@ -1,23 +1,33 @@
+// /src/middleware.ts   (or /middleware.ts if no /src)
+
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const protectedRoute = createRouteMatcher([
   '/plans',
   '/plans/(.*)',
   '/profile(.*)',
+]);
 
-])
-export default clerkMiddleware(async( auth , req)=>{
-      if(protectedRoute(req)) 
-      {
-       await auth.protect();
-      }
+const adminRoutes = createRouteMatcher([
+  '/admin',
+]);
+
+export default clerkMiddleware(async (auth, req) => {
+   const { sessionClaims } = await auth() as { sessionClaims?: { User_role?: { role?: string } } }; // we have given the proper type for sessionClaims
+ 
+   const role = sessionClaims?.User_role?.role || null;
+   if (protectedRoute(req)) {
+     await auth.protect();
+   }
+  
+
+  if (adminRoutes(req)) {
+    if (role != 'admin') {
+      return new Response('Unauthorized', { status: 403 });
+    }
+  }
 });
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
-};  
+  matcher: ['/((?!_next|.*\\..*).*)', '/', '/(api|trpc)(.*)'],
+};
