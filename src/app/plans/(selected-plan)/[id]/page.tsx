@@ -5,12 +5,14 @@ import { plans } from '@/helper/HelperArray';
 import Image from 'next/image';
 import { FaCheck } from 'react-icons/fa';
 
+
 const Plans = () => {
     const { id } = useParams()
     const plan = plans.find(p => p.id === parseInt(id as string));
 
 
     return <>
+
         {plan &&
             <div className='w-full h-screen p-2'>
 

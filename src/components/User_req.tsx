@@ -12,6 +12,7 @@ interface UserRequest {
   email: string;
   from: string;
   to: string;
+  presentDate: string;
 }
 
 const User_req = () => {
@@ -44,10 +45,10 @@ const User_req = () => {
 
   return (
     <div className="p-5 max-w-6xl mx-auto  rounded-xl">
-      <h2 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-4">Event Requests</h2>
+      <h2 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-4 ">Event Requests</h2>
       
       {userRequest.length === 0 ? (
-        <div className="flex flex-col text-center py-12 bg-white rounded-lg shadow-sm border border-gray-100">
+        <div className="flex flex-col text-center py-12 bg-white rounded-lg shadow-md border border-gray-100">
           <p className="text-gray-500 text-lg">No pending requests found</p>
         </div>
       ) : (
@@ -103,6 +104,15 @@ const User_req = () => {
                       <p className="text-sm">
                         <span className="font-medium">Details:</span>{' '}
                         {req.eventDetail.length > 80 ? `${req.eventDetail.substring(0, 80)}...` : req.eventDetail}
+                      </p>
+                    </div>
+                    <div className="flex items-start text-gray-700">
+                      
+                      <p className="text-sm">
+                        <span className="font-medium">Requested Date:</span>{' '}
+                       {
+                        req.presentDate.toString().slice(0,10)
+                       }
                       </p>
                     </div>
                   </div>

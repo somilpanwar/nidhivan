@@ -2,11 +2,14 @@
 import dynamic from "next/dynamic";
 import Footer from "../components/Footer";
 import Hero from "../components/Hero";
+import Navbar from "@/components/Navbar";
 
 const Image = dynamic(() => import("next/image"), { ssr: false });
 const Gallery = dynamic(() => import ("../components/CircularGallery"), { ssr: false });
 export default function Home() {
   return (
+    <>
+      <Navbar />
     <div className="flex flex-col bg-white min-h-screen">
       <main className="flex-col gap-5">
         <Hero />
@@ -77,5 +80,6 @@ export default function Home() {
       </main>
       <Footer />
     </div>
+    </>
   );
 }

@@ -2,6 +2,9 @@
 const mongoose = require('mongoose');
 
 const userRequest = new mongoose.Schema({
+  userId:{
+    type:String,
+  },
   name: {
     type: String,
     required: true,
@@ -40,6 +43,10 @@ const userRequest = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  presentDate:{
+    type: Date,
+    default: Date.now(),
+  }
 }, { timestamps: true }); // timestamps will automatically add createdAt and updatedAt
 
 module.exports = mongoose.model('reqList', userRequest);

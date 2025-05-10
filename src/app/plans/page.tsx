@@ -12,6 +12,7 @@ import {
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import {plans, FAQs}  from '@/helper/HelperArray';
+import Navbar from '@/components/Navbar';
 
 
 const DynamicImage = dynamic(() => import('next/image'), { ssr: false });
@@ -19,14 +20,18 @@ const DynamicImage = dynamic(() => import('next/image'), { ssr: false });
 
 const PlansPage = () => {
   return <>
+    <Navbar />
     <div className="min-h-screen bg-gray-50">
-      <div className="relative h-96">
+      {/* <div className="relative h-96">
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
         <DynamicImage src={"/images/image1.png"} alt="Hero Image" width={2000} height={800} className="object-cover h-full w-full" />
         </div>
+      </div> */}
+      <div className='flex justify-center items-center w-full p-2'>
+        <h1 className='text-3xl  text-center font-bold '>Our Plans</h1>
       </div>
 
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {plans.map((plan, index) => (
             <div key={index} className={cn("bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 transform hover:scale-105")}>

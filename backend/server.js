@@ -23,9 +23,10 @@ app.post('/userReq', (req, res) => {
         eventDetail,
         guestCount,
         email,
-    from,to } = req.body;
+    from,to,userId } = req.body;
 
     const newReq = new UserRequest({
+        userId: userId,
         name: name,
         number: number,
         address: address,
@@ -44,4 +45,14 @@ app.post('/userReq', (req, res) => {
 app.get('/userReq', async(req, res) => {
 const list =await UserRequest.find({})
 res.status(200).json(list);
+})
+
+app.post('/reqList',async(req,res)=>{
+    const {userId} = req.body;
+    await UserRequest.find({userId:userId}).then((data)=>{
+        res.status(200).json(data);
+    }).catch((err)=>{
+       console.log(err);
+    })
+
 })

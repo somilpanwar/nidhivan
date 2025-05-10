@@ -10,11 +10,55 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
 import { FaBars } from 'react-icons/fa';
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
-
+import { useState } from 'react';
+import ReqList from './ReqList';
+interface UserReq {
+      name: string,
+      number:string,
+      address:string,
+      eventDetail: string,
+      guestCount: string,
+      email: string,
+      userId: string,
+}
 const Navbar = () => {
-  const { isSignedIn} = useUser();
+  const {user, isSignedIn} = useUser();
+  const [userReq,setUserReq] = useState<UserReq[]>([{
+      name: '',
+      number:'',
+      address:'',
+      eventDetail: '',
+      guestCount: '',
+      email: '',
+      userId: user?.id || '',
+}])
+ 
+    const reqList= async()=>{
+      if(user && isSignedIn){
+        const res = await fetch('http://localhost:5000/reqList',{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json'
+          },
+          body: JSON.stringify({userId:user?.id})
+        })
+        const data = await res.json();
+      if(res.status === 200){
+        setUserReq(data)
+      }
+    }
+  }
 
   return (
     <nav className="bg-white shadow-md">
@@ -47,6 +91,22 @@ const Navbar = () => {
               >
                Contact us
               </ScrollLink>
+              <div>
+                {userReq && (
+                  <Dialog>
+                  <DialogTrigger onClick={()=>{reqList()}} className=' text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium'>Request List</DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Total Request List</DialogTitle>
+                      <DialogDescription>
+                        <ReqList reqList={userReq} />
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+                
+                )}
+              </div>
             </div>
           </div>
 
@@ -120,4 +180,3 @@ const Navbar = () => {
 }
 
 export default Navbar
-
