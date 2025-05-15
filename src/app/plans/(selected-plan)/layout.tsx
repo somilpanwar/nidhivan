@@ -74,15 +74,13 @@ const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Here you would typically send the data to your backend
-    const res = await fetch('http://localhost:5000/userReq', {
+    await fetch('http://localhost:5000/userReq', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ ...formData, from: startingDate, to: endingDate })
     })
-    console.log(res);
     toast.success("Request Sent Successfully!")
     setreqSend(true);
     router.push('/')
