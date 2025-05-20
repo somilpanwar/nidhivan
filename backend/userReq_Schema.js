@@ -46,6 +46,17 @@ const userRequest = new mongoose.Schema({
   presentDate:{
     type: Date,
     default: Date.now(),
+  },
+  planDetails: {
+    id: Number,
+    title: String,
+    price: String,
+    features:{},
+    image: String,
+    testimonial: {
+        text: String,
+        author: String,
+    }
   }
 }, { timestamps: true }); // timestamps will automatically add createdAt and updatedAt
 

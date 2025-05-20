@@ -13,6 +13,18 @@ interface UserRequest {
   from: string;
   to: string;
   presentDate: string;
+  planDetail: {
+    id: number,
+    title: string,
+    price: string,
+    features:[],
+    image: string,
+    testimonial: {
+      text:string,
+      author: string,
+    }
+  }
+  
 }
 
 const User_req = () => {
@@ -69,6 +81,11 @@ const User_req = () => {
                     <div className="flex items-center text-gray-700">
                       <Mail className="w-4 h-4 mr-2 text-gray-400" />
                       <p className="text-sm">{req.email}</p>
+                    </div>
+
+                     <div className="flex items-center text-gray-700">
+                      <Mail className="w-4 h-4 mr-2 text-gray-400" />
+                      <p className="text-sm">{req.planDetail.title}</p>
                     </div>
                     
                     <div className="flex items-center text-gray-700">

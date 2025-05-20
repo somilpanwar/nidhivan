@@ -12,7 +12,9 @@ import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { plans } from "@/helper/HelperArray";
+
 
 
 const geistSans = Geist({
@@ -26,6 +28,8 @@ const geistMono = Geist_Mono({
 });
 
 export default function PlanLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
+  const {id }  = useParams();
+  const planID  = Number(id);
   const [startingDate, setStartingdate] = useState<Date | undefined>()
   const [endingDate, setEndingdate] = useState<Date | undefined>()
   const [reqSend, setreqSend] = useState(false);
@@ -41,6 +45,7 @@ export default function PlanLayout({ children, }: Readonly<{ children: React.Rea
     guestCount: '',
     email: email || '',
     userId: user?.id,
+    planDetails: plans[planID],
   })
 
   useEffect(() => {
@@ -52,11 +57,12 @@ export default function PlanLayout({ children, }: Readonly<{ children: React.Rea
       guestCount: '',
       email: email || '',
       userId: user?.id,
+      planDetails: plans[planID],
     })
-  }, [user, email, phoneNumber, name])
+  }, [user, email, phoneNumber, name , planID, id])
 
   const bookedDates = [
-    new Date(2025, 3, 10),
+    new Date(2025, 5, 20),
     new Date(2025, 3, 11),
     new Date(2025, 3, 12),
     new Date(2025, 3, 20),
@@ -71,6 +77,10 @@ const router = useRouter();
       [name]: value
     }))
   }
+ const isSameDay = (d1: Date, d2: Date) =>
+    d1.getDate() === d2.getDate() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getFullYear() === d2.getFullYear()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -161,12 +171,19 @@ const router = useRouter();
                       selected={startingDate}
                       onSelect={setStartingdate}
                       initialFocus
+                      
                       modifiers={
                         {
                           booked: bookedDates,
                         }
                       }
-                      disabled={bookedDates}
+                      disabled={(date)=> {
+                       const today = new Date()
+                        today.setHours(0, 0, 0, 0);
+                       const isPastDate = date && date < today;
+                       const isBooked = bookedDates.some((bookedDate) => isSameDay(date, bookedDate))
+                        return isPastDate || isBooked;
+                      }}
                       modifiersClassNames={
                         {
                           booked: "bg-red-500 text-white ",
@@ -197,7 +214,13 @@ const router = useRouter();
                           booked: bookedDates,
                         }
                       }
-                      disabled={bookedDates}
+                     disabled={(date)=> {
+                       const today = new Date()
+                        today.setHours(0, 0, 0, 0);
+                       const isPastDate = date && date < today;
+                       const isBooked = bookedDates.some((bookedDate) => isSameDay(date, bookedDate))
+                        return isPastDate || isBooked;
+                      }}
                       modifiersClassNames={
                         {
                           booked: "bg-red-500 text-white ",

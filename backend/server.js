@@ -32,7 +32,11 @@ app.post('/userReq', (req) => {
         eventDetail,
         guestCount,
         email,
-        from, to, userId } = req.body;
+        from, 
+        to, 
+        userId,
+        planDetails 
+    } = req.body;
 
     const newReq = new UserRequest({
         userId: userId,
@@ -43,7 +47,8 @@ app.post('/userReq', (req) => {
         guestCount: guestCount,
         email: email,
         from: from,
-        to: to
+        to: to,
+        planDetails: planDetails||{}
     })
     newReq.save()
     const mailOptions = {
@@ -51,25 +56,45 @@ app.post('/userReq', (req) => {
         to: email,
         subject: 'Thank You - Garden Booking Request Received',
         html: `
-   <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 20px; background-color: #f9f9f9; border-radius: 8px; border: 1px solid #e0e0e0;">
-  <h2 style="color: #FFDF00; text-align: center; margin-bottom: 5px;">NIDHIVAN</h2>
-  <h4 style="color: #FFDF00; text-align: center; margin-top: 0;">Booking Request Received</h4>
+  <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #212529; max-width: 600px; margin: auto; padding: 30px; background-color: #f8f9fa; border-radius: 10px; border: 1px solid #dee2e6; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);">
   
-  <p style="font-size: 15px;">Dear ${name},</p>
-  
-  <p style="font-size: 15px; line-height: 1.5;">
-    Thank you for your interest in <strong style="color: #FFDF00;">NIDHIVAN Garden</strong>.  
-    We have successfully received your booking request. Our team will review the details and you can expect a confirmation within the next <strong>24 hours</strong>.
+  <!-- Header -->
+  <div style="text-align: center; margin-bottom: 20px;">
+    <h2 style="color: #0056b3; margin: 0; font-size: 28px; font-weight: 700;">NIDHIVAN</h2>
+    <p style="margin: 5px 0 0; font-size: 16px; color: #6c757d;">Your Event. Our Commitment.</p>
+    <hr style="border: none; border-top: 1px solid #ced4da; margin-top: 15px;" />
+  </div>
+
+  <!-- Greeting -->
+  <p style="font-size: 16px;">Dear <strong>${name}</strong>,</p>
+
+  <!-- Message Body -->
+  <p style="font-size: 16px; line-height: 1.6;">
+    Thank you for choosing <strong style="color: #0056b3;">NIDHIVAN Garden</strong>.
+    We’ve successfully received your booking request for the <strong>${planDetails.title}</strong> package.
   </p>
-  
-  <p style="font-size: 15px; line-height: 1.5;">
-    We appreciate you considering us to be part of your special occasion and look forward to assisting you in making your event truly memorable.
+
+  <p style="font-size: 16px; line-height: 1.6;">1 
+    Our reservations team is currently reviewing the details of your request. You’ll receive a confirmation email within the next <strong>24 hours</strong>.
   </p>
-  
-  <p style="font-size: 15px;">Best regards,<br/>
-    <strong style="color: #FFDF00;">Team NIDHIVAN</strong>
+
+  <p style="font-size: 16px; line-height: 1.6;">
+    We're excited to be a part of your special occasion and are dedicated to making it truly memorable.
+    If you have any questions in the meantime, feel free to reply to this message.
   </p>
+
+  <!-- Signature -->
+  <p style="font-size: 16px; margin-top: 30px;">
+    Warm regards,<br/>
+    <strong style="color: #0056b3;">Team NIDHIVAN</strong>
+  </p>
+
+  <!-- Footer -->
+  <div style="margin-top: 30px; text-align: center; font-size: 13px; color: #6c757d;">
+    © ${new Date().getFullYear()} NIDHIVAN Garden. All rights reserved.
+  </div>
 </div>
+
 
     `
     };
