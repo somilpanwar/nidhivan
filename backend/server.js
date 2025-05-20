@@ -25,19 +25,18 @@ const transporter = nodemailer.createTransport({
     }
 
 })
-app.post('/userReq', (req) => {
+app.post('/userReq', (req, res) => {
     const { name,
         number,
         address,
         eventDetail,
         guestCount,
         email,
-        from, 
-        to, 
+        from,
+        to,
         userId,
-        planDetails 
+        planDetails
     } = req.body;
-
     const newReq = new UserRequest({
         userId: userId,
         name: name,
@@ -48,7 +47,7 @@ app.post('/userReq', (req) => {
         email: email,
         from: from,
         to: to,
-        planDetails: planDetails||{}
+        planDetails: planDetails || {}
     })
     newReq.save()
     const mailOptions = {
@@ -74,7 +73,7 @@ app.post('/userReq', (req) => {
     We’ve successfully received your booking request for the <strong>${planDetails.title}</strong> package.
   </p>
 
-  <p style="font-size: 16px; line-height: 1.6;">1 
+  <p style="font-size: 16px; line-height: 1.6;">
     Our reservations team is currently reviewing the details of your request. You’ll receive a confirmation email within the next <strong>24 hours</strong>.
   </p>
 
@@ -106,8 +105,8 @@ app.post('/userReq', (req) => {
             console.log('Email sent:');
         }
     });
+    res.status(200).json({ message: "Request received" });
 
-    
 })
 
 app.get('/userReq', async (req, res) => {

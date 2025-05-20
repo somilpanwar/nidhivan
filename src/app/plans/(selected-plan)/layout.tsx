@@ -28,8 +28,8 @@ const geistMono = Geist_Mono({
 });
 
 export default function PlanLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
-  const {id }  = useParams();
-  const planID  = Number(id);
+  const { id } = useParams();
+  const planID = Number(id);
   const [startingDate, setStartingdate] = useState<Date | undefined>()
   const [endingDate, setEndingdate] = useState<Date | undefined>()
   const [reqSend, setreqSend] = useState(false);
@@ -59,7 +59,7 @@ export default function PlanLayout({ children, }: Readonly<{ children: React.Rea
       userId: user?.id,
       planDetails: plans[planID],
     })
-  }, [user, email, phoneNumber, name , planID, id])
+  }, [user, email, phoneNumber, name, planID, id])
 
   const bookedDates = [
     new Date(2025, 5, 20),
@@ -68,7 +68,7 @@ export default function PlanLayout({ children, }: Readonly<{ children: React.Rea
     new Date(2025, 3, 20),
     new Date(2025, 3, 21),
   ]
-const router = useRouter();
+  const router = useRouter();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     //    we are using this to set the value acc to there name
     const { name, value } = e.target
@@ -77,24 +77,33 @@ const router = useRouter();
       [name]: value
     }))
   }
- const isSameDay = (d1: Date, d2: Date) =>
+  const isSameDay = (d1: Date, d2: Date) =>
     d1.getDate() === d2.getDate() &&
     d1.getMonth() === d2.getMonth() &&
     d1.getFullYear() === d2.getFullYear()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await fetch('http://localhost:5000/userReq', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ ...formData, from: startingDate, to: endingDate })
-    })
-    toast.success("Request Sent Successfully!")
-    setreqSend(true);
-    router.push('/')
-    
+    try {
+
+      const res = await fetch('http://localhost:5000/userReq', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...formData, from: startingDate, to: endingDate })
+      })
+      if (res.status === 200) {
+
+        toast.success("Request Sent Successfully!")
+        setreqSend(true);
+
+        router.push('/')
+      }
+    } catch (error) {
+      console.error("Error sending request:", error);
+    }
+
   }
   return (
     <>
@@ -103,152 +112,152 @@ const router = useRouter();
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col   md:flex-row-reverse  items-center justify-between px-4 md:px-3  py-3 gap-5 gap-y-1 md:gap-y-0`}
       >
         {/* Form Section */}
-        
 
-          <div className="w-full  md:w-1/2  p-2">
-            <h2 className="text-2xl font-bold mb-4">User Details</h2>
-            <form onSubmit={handleSubmit} className="space-y-4 w-full flex flex-col items-center">
-              <Input
-                name="name"
-                placeholder="Full Name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
-              <Input
-                name="number"
-                type="tel"
-                placeholder="Phone Number"
-                value={formData.number}
-                pattern="[0-9]{10}"
-                onChange={handleInputChange}
-                required
-              />
-              <Textarea
-                name="address"
-                placeholder="Address"
-                value={formData.address}
-                onChange={handleInputChange}
-                required
-              />
-              <Input
-                name="eventDetail"
-                placeholder="Event Details"
-                value={formData.eventDetail}
-                onChange={handleInputChange}
-                required
-              />
-              <Input
-                name="guestCount"
-                type="number"
-                placeholder="Approximate Number of Guests"
-                value={formData.guestCount}
-                onChange={handleInputChange}
-                required
-              />
-              <Input
-                name="email"
-                type="email"
-                placeholder="Email Address"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-              <div>
 
-                <span className="font-bold ">From - </span>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {startingDate ? format(startingDate, "PPP") : <span>Pick a start date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
+        <div className="w-full  md:w-1/2  p-2">
+          <h2 className="text-2xl font-bold mb-4">User Details</h2>
+          <form onSubmit={handleSubmit} className="space-y-4 w-full flex flex-col items-center">
+            <Input
+              name="name"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+            />
+            <Input
+              name="number"
+              type="tel"
+              placeholder="Phone Number"
+              value={formData.number}
+              pattern="[0-9]{10}"
+              onChange={handleInputChange}
+              required
+            />
+            <Textarea
+              name="address"
+              placeholder="Address"
+              value={formData.address}
+              onChange={handleInputChange}
+              required
+            />
+            <Input
+              name="eventDetail"
+              placeholder="Event Details"
+              value={formData.eventDetail}
+              onChange={handleInputChange}
+              required
+            />
+            <Input
+              name="guestCount"
+              type="number"
+              placeholder="Approximate Number of Guests"
+              value={formData.guestCount}
+              onChange={handleInputChange}
+              required
+            />
+            <Input
+              name="email"
+              type="email"
+              placeholder="Email Address"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+            <div>
 
-                    <Calendar
-                      mode="single"
-                      selected={startingDate}
-                      onSelect={setStartingdate}
-                      initialFocus
-                      
-                      modifiers={
-                        {
-                          booked: bookedDates,
-                        }
+              <span className="font-bold ">From - </span>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {startingDate ? format(startingDate, "PPP") : <span>Pick a start date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+
+                  <Calendar
+                    mode="single"
+                    selected={startingDate}
+                    onSelect={setStartingdate}
+                    initialFocus
+
+                    modifiers={
+                      {
+                        booked: bookedDates,
                       }
-                      disabled={(date)=> {
-                       const today = new Date()
-                        today.setHours(0, 0, 0, 0);
-                       const isPastDate = date && date < today;
-                       const isBooked = bookedDates.some((bookedDate) => isSameDay(date, bookedDate))
-                        return isPastDate || isBooked;
-                      }}
-                      modifiersClassNames={
-                        {
-                          booked: "bg-red-500 text-white ",
-                        }
+                    }
+                    disabled={(date) => {
+                      const today = new Date()
+                      today.setHours(0, 0, 0, 0);
+                      const isPastDate = date && date < today;
+                      const isBooked = bookedDates.some((bookedDate) => isSameDay(date, bookedDate))
+                      return isPastDate || isBooked;
+                    }}
+                    modifiersClassNames={
+                      {
+                        booked: "bg-red-500 text-white ",
                       }
+                    }
 
-                    />
-                  </PopoverContent>
-                </Popover>
+                  />
+                </PopoverContent>
+              </Popover>
 
-                <span className="font-bold"> To - </span>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {endingDate ? format(endingDate, "PPP") : <span>Pick a end date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
+              <span className="font-bold"> To - </span>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {endingDate ? format(endingDate, "PPP") : <span>Pick a end date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
 
-                    <Calendar
-                      mode="single"
-                      selected={endingDate}
-                      onSelect={setEndingdate}
-                      initialFocus
-                      modifiers={
-                        {
-                          booked: bookedDates,
-                        }
+                  <Calendar
+                    mode="single"
+                    selected={endingDate}
+                    onSelect={setEndingdate}
+                    initialFocus
+                    modifiers={
+                      {
+                        booked: bookedDates,
                       }
-                     disabled={(date)=> {
-                       const today = new Date()
-                        today.setHours(0, 0, 0, 0);
-                       const isPastDate = date && date < today;
-                       const isBooked = bookedDates.some((bookedDate) => isSameDay(date, bookedDate))
-                        return isPastDate || isBooked;
-                      }}
-                      modifiersClassNames={
-                        {
-                          booked: "bg-red-500 text-white ",
-                        }
+                    }
+                    disabled={(date) => {
+                      const today = new Date()
+                      today.setHours(0, 0, 0, 0);
+                      const isPastDate = date && date < today;
+                      const isBooked = bookedDates.some((bookedDate) => isSameDay(date, bookedDate))
+                      return isPastDate || isBooked;
+                    }}
+                    modifiersClassNames={
+                      {
+                        booked: "bg-red-500 text-white ",
                       }
+                    }
 
-                    />
-                  </PopoverContent>
-                </Popover>
+                  />
+                </PopoverContent>
+              </Popover>
 
-              </div>
-              <div className="flex gap-3">
+            </div>
+            <div className="flex gap-3">
 
-                <Button type="submit" className={cn("ml-4  transition delay-75 duration-100 ease-in-out ", { "bg-green-500": reqSend })}>
-                  {reqSend ? "Slot Requested" : "Request a Slot"}
-                </Button>
-                {reqSend && <Button variant="destructive" className="ml-4 transition delay-150 duration-300 ease-in-out" onClick={() => { setreqSend(false); toast.error("Request Cancelled!") }}>
-                  cancel Request
-                </Button>}
-              </div>
-            </form>
-          </div>
-
-          {/* Child Component (Content or Media) */}
-          <div className="w-full md:w-1/2 flex justify-center items-center">
-            {children}
-          </div>
+              <Button type="submit" className={cn("ml-4  transition delay-75 duration-100 ease-in-out ", { "bg-green-500": reqSend })}>
+                {reqSend ? "Slot Requested" : "Request a Slot"}
+              </Button>
+              {reqSend && <Button variant="destructive" className="ml-4 transition delay-150 duration-300 ease-in-out" onClick={() => { setreqSend(false); toast.error("Request Cancelled!") }}>
+                cancel Request
+              </Button>}
+            </div>
+          </form>
         </div>
+
+        {/* Child Component (Content or Media) */}
+        <div className="w-full md:w-1/2 flex justify-center items-center">
+          {children}
+        </div>
+      </div>
 
     </>
 
