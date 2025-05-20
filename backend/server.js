@@ -37,6 +37,7 @@ app.post('/userReq', (req, res) => {
         userId,
         planDetails
     } = req.body;
+   
     const newReq = new UserRequest({
         userId: userId,
         name: name,
