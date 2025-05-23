@@ -37,7 +37,7 @@ app.post('/userReq', (req, res) => {
         userId,
         planDetails
     } = req.body;
-   
+
     const newReq = new UserRequest({
         userId: userId,
         name: name,
@@ -48,7 +48,7 @@ app.post('/userReq', (req, res) => {
         email: email,
         from: from,
         to: to,
-        planDetails: planDetails || {}
+        planDetails: planDetails
     })
     newReq.save()
     const mailOptions = {
@@ -124,3 +124,132 @@ app.post('/reqList', async (req, res) => {
     })
 
 })
+
+app.post('/reqAccept', async (req, res) => {
+    const {email, name, packageName, startDate, endDate } = req.body;
+    const mailOptions = {
+        from: process.env.ADMIN_EMAIL,
+        to: email,
+        subject: 'Booking Confirmation - NIDHIVAN Garden',
+        html:
+            `<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #212529; max-width: 600px; margin: auto; padding: 30px; background-color: #f8f9fa; border-radius: 10px; border: 1px solid #dee2e6; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);">
+
+  <!-- Header -->
+  <div style="text-align: center; margin-bottom: 20px;">
+    <h2 style="color: #0056b3; margin: 0; font-size: 28px; font-weight: 700;">NIDHIVAN</h2>
+    <p style="margin: 5px 0 0; font-size: 16px; color: #6c757d;">Your Event. Our Commitment.</p>
+    <hr style="border: none; border-top: 1px solid #ced4da; margin-top: 15px;" />
+  </div>
+
+  <!-- Greeting -->
+  <p style="font-size: 16px;">Dear <strong>${name}</strong>,</p>
+
+  <!-- Message Body -->
+  <p style="font-size: 16px; line-height: 1.6;">
+  We are delighted to confirm your booking for the <strong>${packageName}</strong> package at <strong style="color: #0056b3;">NIDHIVAN Garden</strong>, scheduled from <strong>${startDate}</strong> to <strong>${endDate}</strong>.
+</p>
+
+
+  <p style="font-size: 16px; line-height: 1.6;">
+    To ensure a smooth and personalized experience, we kindly request you to visit our venue within the next <strong>1–2 days</strong>. During your visit, we will complete the required formalities and proceed with the advance payment.
+  </p>
+
+  <p style="font-size: 16px; line-height: 1.6;">
+    Our team will be available on-site to walk you through the event arrangements and answer any questions you may have.
+    Please feel free to schedule your visit by replying to this email or calling our reservation desk directly.
+  </p>
+
+  <p style="font-size: 16px; line-height: 1.6;">
+    We look forward to welcoming you and being a part of your special celebration.
+  </p>
+
+  <!-- Signature -->
+  <p style="font-size: 16px; margin-top: 30px;">
+    Warm regards,<br/>
+    <strong style="color: #0056b3;">Team NIDHIVAN</strong>
+  </p>
+
+  <!-- Footer -->
+  <div style="margin-top: 30px; text-align: center; font-size: 13px; color: #6c757d;">
+    © ${new Date().getFullYear()} NIDHIVAN Garden. All rights reserved.
+  </div>
+</div>
+`
+    }
+
+     transporter.sendMail(mailOptions, (error) => {
+        if (error) {
+            console.log('Error sending email:', error);
+        } else {
+            console.log('Email sent!');
+        }
+    });
+    res.status(200).json({ message: "email send!" });
+}
+)
+
+app.post('/reqReject', async (req, res) => {
+    const {email, name, packageName,reason } = req.body;
+    const mailOptions = {
+        from: process.env.ADMIN_EMAIL,
+        to: email,
+        subject: 'Booking Cancelled - NIDHIVAN Garden',
+        html:
+            `<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #212529; max-width: 600px; margin: auto; padding: 30px; background-color: #f8f9fa; border-radius: 10px; border: 1px solid #dee2e6; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);">
+
+  <!-- Header -->
+  <div style="text-align: center; margin-bottom: 20px;">
+    <h2 style="color: #c82333; margin: 0; font-size: 28px; font-weight: 700;">NIDHIVAN</h2>
+    <p style="margin: 5px 0 0; font-size: 16px; color: #6c757d;">Your Event. Our Commitment.</p>
+    <hr style="border: none; border-top: 1px solid #ced4da; margin-top: 15px;" />
+  </div>
+
+  <!-- Greeting -->
+  <p style="font-size: 16px;">Dear <strong>${name}</strong>,</p>
+
+  <!-- Message Body -->
+  <p style="font-size: 16px; line-height: 1.6;">
+    Thank you for considering <strong style="color: #0056b3;">NIDHIVAN Garden</strong> for your upcoming event. We truly appreciate your interest and the trust you've placed in us.
+  </p>
+
+  <p style="font-size: 16px; line-height: 1.6;">
+    After carefully reviewing your booking request for the <strong>${packageName}</strong> package, we regret to inform you that we are unable to confirm your reservation due to the following reason:
+  </p>
+
+  <p style="font-size: 16px; font-style: italic; color: #dc3545; line-height: 1.6;">
+    "${reason}"
+  </p>
+
+  <p style="font-size: 16px; line-height: 1.6;">
+    We understand this may come as a disappointment, and we sincerely apologize for any inconvenience this may cause. If your plans are flexible, we would be happy to discuss alternative dates or packages that may suit your needs.
+  </p>
+
+  <p style="font-size: 16px; line-height: 1.6;">
+    Please don’t hesitate to reach out if you have any questions or if there's anything we can assist you with.
+  </p>
+
+  <!-- Signature -->
+  <p style="font-size: 16px; margin-top: 30px;">
+    Warm regards,<br/>
+    <strong style="color: #0056b3;">Team NIDHIVAN</strong>
+  </p>
+
+  <!-- Footer -->
+  <div style="margin-top: 30px; text-align: center; font-size: 13px; color: #6c757d;">
+    © ${new Date().getFullYear()} NIDHIVAN Garden. All rights reserved.
+  </div>
+</div>
+
+`
+    }
+
+     transporter.sendMail(mailOptions, (error) => {
+        if (error) {
+            console.log('Error sending email:', error);
+        } else {
+            console.log('Email sent!');
+        }
+    });
+    res.status(200).json({ message: "email send!" });
+}
+)

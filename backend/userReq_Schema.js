@@ -57,7 +57,12 @@ const userRequest = new mongoose.Schema({
         text: String,
         author: String,
     }
-  }
+  },
+  status: {
+    type: String,
+    enum: ['confirmed', 'cancelled'],
+    default: 'cancelled',
+  },
 }, { timestamps: true }); // timestamps will automatically add createdAt and updatedAt
 
 module.exports = mongoose.model('reqList', userRequest);

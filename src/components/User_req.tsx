@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Clock, Mail, Phone, MapPin, Users, Calendar } from 'lucide-react';
+import { FaPager } from 'react-icons/fa';
+import { toast } from 'sonner';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
 
 
 interface UserRequest {
@@ -13,22 +17,26 @@ interface UserRequest {
   from: string;
   to: string;
   presentDate: string;
-  planDetail: {
+  planDetails: {
     id: number,
     title: string,
     price: string,
-    features:[],
+    features: [],
     image: string,
     testimonial: {
-      text:string,
+      text: string,
       author: string,
     }
   }
-  
+
 }
 
 const User_req = () => {
   const [userRequest, setUserRequest] = useState<UserRequest[]>([]);
+  const [decline, setDecline] = useState(false);
+ const [cancel, setCancel] = useState(false);
+  const [reason, setReason] = useState<string>('');
+  const [accepted, setAccepted] = useState(false);
 
   useEffect(() => {
     const list = async () => {
@@ -45,20 +53,40 @@ const User_req = () => {
     list();
   }, [userRequest]);
 
-  const handleAccept = (id: string) => {
-    console.log('Accepted ID:', id);
-    // Future: send a request to the backend to update status
+  const handleAccept = async (email: string, name: string, packageName: string, startDate: string, endDate: string) => {
+    const res = await fetch(`http://localhost:5000/reqAccept`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, name, packageName, startDate, endDate }),
+    })
+    if (res.status === 200) {
+      toast.success('Email Sent ');
+      setAccepted(true);
+    }
+    
   };
 
-  const handleReject = (id: string) => {
-    console.log('Rejected ID:', id);
-    // Future: send a request to the backend to update status
+  const handleReject = async (email: string, name: string, packageName: string ) => {
+    
+    const res = await fetch(`http://localhost:5000/reqReject`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, name, packageName, reason }),
+    })
+    if (res.status === 200) {
+      toast.success('Email Sent ');
+      setDecline(true);
+    }
   };
 
   return (
     <div className="p-5 max-w-6xl mx-auto  rounded-xl">
       <h2 className="text-3xl font-bold mb-8 text-gray-800 border-b pb-4 ">Event Requests</h2>
-      
+
       {userRequest.length === 0 ? (
         <div className="flex flex-col text-center py-12 bg-white rounded-lg shadow-md border border-gray-100">
           <p className="text-gray-500 text-lg">No pending requests found</p>
@@ -70,10 +98,10 @@ const User_req = () => {
               key={req._id}
               className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden transition-all hover:shadow-lg"
             >
-              <div className="border-b border-gray-100 bg-yellow-100 px-6 py-4">
+              <div className="border-b border-gray-100 bg-yellow-200 px-6 py-4">
                 <h3 className="text-xl font-semibold text-gray-800">{req.name}</h3>
               </div>
-              
+
               <div className="p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4">
                   {/* Left column - Contact info */}
@@ -83,22 +111,22 @@ const User_req = () => {
                       <p className="text-sm">{req.email}</p>
                     </div>
 
-                     <div className="flex items-center text-gray-700">
-                      <Mail className="w-4 h-4 mr-2 text-gray-400" />
-                      <p className="text-sm">{req.planDetail.title}</p>
+                    <div className="flex items-center text-gray-700">
+                      <FaPager className="w-4 h-4 mr-2 text-gray-400" />
+                      <p className="text-sm">{req.planDetails.title}</p>
                     </div>
-                    
+
                     <div className="flex items-center text-gray-700">
                       <Phone className="w-4 h-4 mr-2 text-gray-400" />
                       <p className="text-sm">{req.number}</p>
                     </div>
-                    
+
                     <div className="flex items-start text-gray-700">
                       <MapPin className="w-4 h-4 mr-2 mt-1 text-gray-400 flex-shrink-0" />
                       <p className="text-sm">{req.address}</p>
                     </div>
                   </div>
-                  
+
                   {/* Right column - Event details */}
                   <div className="space-y-3">
                     <div className="flex items-center text-gray-700">
@@ -107,7 +135,7 @@ const User_req = () => {
                         <span className="font-medium">Guests:</span> {req.guestCount}
                       </p>
                     </div>
-                    
+
                     <div className="flex items-center text-gray-700">
                       <Calendar className="w-4 h-4 mr-2 text-gray-400" />
                       <p className="text-sm">
@@ -115,7 +143,7 @@ const User_req = () => {
                         {new Date(req.from).toLocaleDateString()} - {new Date(req.to).toLocaleDateString()}
                       </p>
                     </div>
-                    
+
                     <div className="flex items-start text-gray-700">
                       <Clock className="w-4 h-4 mr-2 mt-1 text-gray-400 flex-shrink-0" />
                       <p className="text-sm">
@@ -124,32 +152,51 @@ const User_req = () => {
                       </p>
                     </div>
                     <div className="flex items-start text-gray-700">
-                      
+
                       <p className="text-sm">
                         <span className="font-medium">Requested Date:</span>{' '}
-                       {
-                        req.presentDate.toString().slice(0,10)
-                       }
+                        {
+                          req.presentDate.toString().slice(0, 10)
+                        }
                       </p>
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Action buttons */}
-                <div className="mt-6 flex space-x-4">
-                  <button
-                    className="flex-1 bg-amber-300 text-white py-2 px-4 rounded-md shadow-sm hover:bg-amber-500 transition-colors font-medium"
-                    onClick={() => handleAccept(req._id)}
-                  >
-                    Accept
-                  </button>
-                  <button
-                    className="flex-1 bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded-md shadow-sm hover:bg-gray-50 transition-colors font-medium"
-                    onClick={() => handleReject(req._id)}
-                  >
-                    Decline
-                  </button>
-                </div>
+                {
+                  accepted || decline ? (
+                      <div className='w-full flex justify-center items-center'>
+                        <Button className={cn('bg-green-400 text-white p-3 rounded-md w-full',{'bg-red-400':decline})}>
+                          <span className="text-white font-medium">{accepted?("Accepted"):("Decline")}</span>
+                        </Button>
+                      </div>
+                  ): (
+                    <div className="mt-6 flex space-x-4">
+                      <button
+                        className="flex-1 bg-amber-300 text-white py-2 px-4 rounded-md shadow-sm hover:bg-amber-500 transition-colors font-medium"
+                        onClick={() => handleAccept(req.email, req.name, req.planDetails.title, new Date(req.from).toLocaleDateString(), new Date(req.to).toLocaleDateString())}
+                      >
+                        Accept
+                      </button>
+                      <button
+                        className="flex-1 bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded-md shadow-sm hover:bg-gray-50 transition-colors font-medium"
+                        onClick={() => setCancel(true)}
+                      >
+                        Decline
+                      </button>
+                      {
+                        cancel && (
+                          <div>
+                            <h1>Reason:</h1>
+                              <input type="text" required placeholder='Type Here ....' value={reason} onChange={(e) => setReason(e.target.value)} />
+                              {reason.length>10 && <Button type='submit' onClick={()=>handleReject(req.email, req.name, req.planDetails.title)}>Send</Button>}
+                          </div>
+                        )}
+                    </div>
+
+                  )
+                }
               </div>
             </div>
           ))}
