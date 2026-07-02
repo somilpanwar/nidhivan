@@ -1,59 +1,101 @@
-import Image from "next/image"
+import Link from "next/link";
+import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 
+const footerLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+];
 
+const socialLinks = [
+  { href: "#", label: "Instagram", icon: Instagram },
+  { href: "#", label: "Facebook", icon: Facebook },
+  { href: "#", label: "Email", icon: Mail },
+];
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white" id="footer">
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
-        <Image src="/image/logo.png" alt="Logo" width={120} height={120} className=" mb-6" />
-        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-          <div className="grid grid-cols-2 gap-8 xl:col-span-2">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">About</h3>
-                <ul className="mt-4 space-y-4">
-                  <li>
-                    <a href="#" className="text-base text-gray-300 hover:text-white">Our Story</a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-base text-gray-300 hover:text-white">Team</a>
-                  </li>
-                </ul>
-              </div>
-              <div className="mt-12 md:mt-0">
-                <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Services</h3>
-                <ul className="mt-4 space-y-4">
-                  <li>
-                    <a href="#" className="text-base text-gray-300 hover:text-white">Weddings</a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-base text-gray-300 hover:text-white">Events</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+    <footer className="border-t border-[#6b4b3a]/10 bg-[#f7ead0] text-[#3b2522]">
+      <div className="mx-auto grid w-full max-w-7xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[1.4fr_0.8fr_0.8fr] lg:px-8">
+        <div className="space-y-5">
+          <div>
+            <p
+              className="text-3xl tracking-[0.35em]"
+              style={{ fontFamily: "var(--font-zaslia)" }}
+            >
+              NIDHIVAN
+            </p>
+            <p className="mt-3 max-w-md text-sm leading-7 text-[#7d6254]">
+              A serene wedding garden designed for timeless celebrations, quiet luxury,
+              and moments that feel beautifully unhurried.
+            </p>
           </div>
-          <div className="mt-8 xl:mt-0">
-            <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">Location</h3>
-            <div className="mt-4">
-              {/* Replace with actual Google Maps embed */}
-              <div className="bg-gray-700 h-48 w-full">
-              </div>
+
+          <div className="space-y-3 text-sm text-[#7d6254]">
+            <div className="flex items-center gap-3">
+              <MapPin className="h-4 w-4" />
+              <span>Elegant garden venue for destination weddings</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Phone className="h-4 w-4" />
+              <span>Private consultation on request</span>
             </div>
           </div>
         </div>
-        <div className="mt-8 border-t border-gray-700 pt-8 md:flex md:items-center md:justify-between">
-          <div className="flex space-x-6 md:order-2">
-            {/* Add your social media links here */}
+
+        <div>
+          <h2
+            className="text-[0.7rem] uppercase tracking-[0.35em] text-[#7d6254]"
+            style={{ fontFamily: "var(--font-orange)" }}
+          >
+            Navigation
+          </h2>
+          <div className="mt-5 flex flex-col gap-4">
+            {footerLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm uppercase tracking-[0.24em] text-[#3b2522] transition-colors duration-300 hover:text-[#7d6254]"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
-          <p className="mt-8 text-base text-gray-400 md:mt-0 md:order-1">
-            &copy; 2023 NIDHIVAN. All rights reserved.
-          </p>
+        </div>
+
+        <div>
+          <h2
+            className="text-[0.7rem] uppercase tracking-[0.35em] text-[#7d6254]"
+            style={{ fontFamily: "var(--font-orange)" }}
+          >
+            Social
+          </h2>
+          <div className="mt-5 flex items-center gap-3">
+            {socialLinks.map((link) => {
+              const Icon = link.icon;
+
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  aria-label={link.label}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#6b4b3a]/15 bg-[#fff5dc] text-[#3b2522] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_12px_25px_rgba(59,37,34,0.08)]"
+                >
+                  <Icon className="h-4 w-4" />
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-[#6b4b3a]/10 px-4 py-5 sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 text-xs uppercase tracking-[0.28em] text-[#7d6254] sm:flex-row sm:items-center sm:justify-between">
+          <p>Copyright {new Date().getFullYear()} Nidhivan. All rights reserved.</p>
+          <p>Crafted for refined celebrations.</p>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

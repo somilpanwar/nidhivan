@@ -1,182 +1,143 @@
-"use client"
-import Image from 'next/image'
-import Link from 'next/link'
-// Fixed code block
-import { Link as ScrollLink } from 'react-scroll';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+"use client";
 
-import { FaBars } from 'react-icons/fa';
-import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
-import { useState } from 'react';
-import ReqList from './ReqList';
-interface UserReq {
-      name: string,
-      number:string,
-      address:string,
-      eventDetail: string,
-      guestCount: string,
-      email: string,
-      userId: string,
-}
+import Link from "next/link";
+import { Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import gsap from "gsap";
+
+const navigationLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+];
+
 const Navbar = () => {
-  const {user, isSignedIn} = useUser();
-  const [userReq,setUserReq] = useState<UserReq[]>([{
-      name: '',
-      number:'',
-      address:'',
-      eventDetail: '',
-      guestCount: '',
-      email: '',
-      userId: user?.id || '',
-}])
- 
-    const reqList= async()=>{
-      if(user && isSignedIn){
-        const res = await fetch('http://localhost:5000/reqList',{
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json'
-          },
-          body: JSON.stringify({userId:user?.id})
-        })
-        const data = await res.json();
-      if(res.status === 200){
-        setUserReq(data)
-      }
+  const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navbarRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 18);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!navbarRef.current) {
+      return;
     }
-  }
+
+    const context = gsap.context(() => {
+      gsap.from(navbarRef.current, {
+        y: -18,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+
+      gsap.from("[data-nav-brand], [data-nav-link]", {
+        opacity: 1,
+        y: -2,
+        duration: 0.6,
+        ease: "power3.out",
+        stagger: 0.08,
+        delay: 0.15,
+      });
+    }, navbarRef);
+
+    return () => context.revert();
+  }, []);
 
   return (
-    <nav className="bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <Image src="/image/logo.png" alt="Logo" width={120} height={120} />
-            </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link href="/" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                Home
-              </Link>
-              <ScrollLink
-                to="garden-photos"
-                smooth={true}
-                duration={500}
-                className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium cursor-pointer"
-              >
-                Explore
-              </ScrollLink>
-              <Link href="/plans" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                Plans
-              </Link>
-              <ScrollLink
-                to="footer"
-                smooth={true}
-                duration={1000}
-                className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium cursor-pointer"
-              >
-               Contact us
-              </ScrollLink>
-              <div>
-                {userReq && (
-                  <Dialog>
-                  <DialogTrigger onClick={()=>{reqList()}} className=' text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium'>Request List</DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Total Request List</DialogTitle>
-                      <DialogDescription>
-                        <ReqList reqList={userReq} />
-                      </DialogDescription>
-                    </DialogHeader>
-                  </DialogContent>
-                </Dialog>
-                
-                )}
-              </div>
-            </div>
-          </div>
+    <header
+      ref={navbarRef}
+      className={`sticky top-0 z-50 border-b border-[#6b4b3a]/10 transition-all duration-300 ${
+        isScrolled
+          ? "bg-[#fff5dc]/75 shadow-[0_14px_40px_rgba(59,37,34,0.08)] backdrop-blur-xl"
+          : "bg-[#fff5dc]/45 backdrop-blur-lg"
+      }`}
+    >
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <Link href="/" data-nav-brand className="group flex items-baseline gap-3 rounded-full border border-transparent px-2 py-1 transition-colors duration-300 hover:border-[#6b4b3a]/10 hover:bg-[#fff5dc]/40">
+          <span
+            className="text-xl tracking-[0.35em] text-[#3b2522] transition-transform duration-300 group-hover:translate-x-0.5 sm:text-2xl"
+            style={{ fontFamily: "var(--font-zaslia)" }}
+          >
+            NIDHIVAN
+          </span>
+          <span className="hidden text-[0.65rem] uppercase tracking-[0.28em] text-[#7d6254] sm:inline-block">
+            Wedding Garden
+          </span>
+        </Link>
 
-          <div className="hidden sm:flex items-center">
-            {isSignedIn ? (
-              <Link href="/profile" className="text-black hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">
-               <UserButton />
+        <nav className="hidden items-center gap-2 rounded-full border border-[#6b4b3a]/10 bg-[#fff5dc]/50 px-2 py-2 md:flex">
+          {navigationLinks.map((link) => {
+            const isActive = pathname === link.href;
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                data-nav-link
+                className={`relative rounded-full px-4 py-2 text-sm uppercase tracking-[0.28em] transition-all duration-300 ${
+                  isActive
+                    ? "bg-[#3b2522] text-[#fff5dc] shadow-[0_10px_24px_rgba(59,37,34,0.14)]"
+                    : "text-[#7d6254] hover:bg-[#3b2522]/5 hover:text-[#3b2522]"
+                }`}
+              >
+                {link.label}
               </Link>
-            ) : (
-              <>
-                <SignInButton mode="modal">
-                  <button className="text-black hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">
-                    Sign In
-                  </button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-md text-sm font-medium ml-2">
-                    Sign Up
-                  </button>
-                </SignUpButton>
-              </>
-            )}
-          </div>
-          <div className='sm:hidden'>
-            <Sheet>
-              <SheetTrigger>
-                <FaBars className="text-black" />
-              </SheetTrigger>
-              <SheetContent className='bg-amber-100'>
-                <SheetHeader>
-                  <SheetTitle>
-                    <p className='text-yellow-400 font-bold text-xl'>NIDHIVAN</p>
-                  </SheetTitle>
-                  <div className="flex flex-col space-y-4 mt-4">
-                    <Link href="/" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                      Home
-                    </Link>
-                    <Link href="/plans" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                      Plans
-                    </Link>
-                    <Link href="/contact" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                      Contact Us
-                    </Link>
-                    {isSignedIn ? (
-                      <Link href="/profile" className="border-transparent text-black hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                        Profile
-                      </Link>
-                    ) : (
-                      <>
-                        <SignInButton mode="modal">
-                          <button className="text-black hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium">
-                            Sign In
-                          </button>
-                        </SignInButton>
-                        <SignUpButton mode="modal">
-                          <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-md text-sm font-medium">
-                            Sign Up
-                          </button>
-                        </SignUpButton>
-                      </>
-                    )}
-                  </div>
-                </SheetHeader>
-              </SheetContent>
-            </Sheet>
-          </div>
+            );
+          })}
+        </nav>
+
+        <button
+          type="button"
+          onClick={() => setIsMenuOpen((value) => !value)}
+          data-nav-item
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#6b4b3a]/15 bg-[#fff5dc]/70 text-[#3b2522] shadow-[0_10px_20px_rgba(59,37,34,0.05)] backdrop-blur-md transition-transform duration-300 hover:scale-105 md:hidden"
+          aria-label="Toggle navigation menu"
+          aria-expanded={isMenuOpen}
+        >
+          {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </div>
+
+      <div
+        className={`overflow-hidden border-t border-[#6b4b3a]/10 bg-[#fff5dc]/95 px-4 transition-all duration-300 md:hidden ${
+          isMenuOpen ? "max-h-64 py-4 shadow-[0_20px_40px_rgba(59,37,34,0.08)] backdrop-blur-xl" : "max-h-0 py-0"
+        }`}
+      >
+        <div className="mx-auto flex max-w-7xl flex-col gap-3">
+          {navigationLinks.map((link) => {
+            const isActive = pathname === link.href;
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                data-nav-item
+                className={`rounded-full px-4 py-3 text-sm uppercase tracking-[0.24em] transition-colors duration-300 ${
+                  isActive
+                    ? "bg-[#3b2522] text-[#fff5dc]"
+                    : "text-[#3b2522] hover:bg-[#3b2522]/5"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
       </div>
-    </nav>
-  )
-}
+    </header>
+  );
+};
 
-export default Navbar
+export default Navbar;
