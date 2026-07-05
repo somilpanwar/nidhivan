@@ -7,6 +7,7 @@ import { useEffect, useRef } from "react";
 const events = [
   {
     title: "Sangeet Evening",
+    imgUrl: "/images/stage.png",
     label: "Previous event",
     description: "Warm lights, live music, and an intimate open-air celebration.",
     span: "lg:col-span-7",
@@ -14,6 +15,7 @@ const events = [
   },
   {
     title: "Wedding Ceremony",
+    imgUrl: "/images/gdn-photo1.png",
     label: "Previous event",
     description: "A calm, floral setting designed for timeless vows.",
     span: "lg:col-span-5",
@@ -21,6 +23,7 @@ const events = [
   },
   {
     title: "Reception Dinner",
+    imgUrl: "/images/stage.png",
     label: "Previous event",
     description: "Elegant tablescapes and soft ambient lighting after sunset.",
     span: "lg:col-span-5",
@@ -28,6 +31,7 @@ const events = [
   },
   {
     title: "Haldi Morning",
+    imgUrl: "/images/haldi.png",
     label: "Previous event",
     description: "A bright, joyful moment with natural textures and soft colour.",
     span: "lg:col-span-7",
@@ -130,7 +134,7 @@ const Gallerysection = () => {
             >
               <div className={`relative ${event.height}`}>
                 <Image
-                  src="/images/demo1.png"
+                  src={event.imgUrl}
                   alt={event.title}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"

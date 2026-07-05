@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import {  Instagram, Mail, MapPin, Phone } from "lucide-react";
 
 const footerLinks = [
   { href: "/", label: "Home" },
@@ -8,7 +8,6 @@ const footerLinks = [
 
 const socialLinks = [
   { href: "#", label: "Instagram", icon: Instagram },
-  { href: "#", label: "Facebook", icon: Facebook },
   { href: "#", label: "Email", icon: Mail },
 ];
 
@@ -33,11 +32,16 @@ const Footer = () => {
           <div className="space-y-3 text-sm text-[#7d6254]">
             <div className="flex items-center gap-3">
               <MapPin className="h-4 w-4" />
-              <span>Elegant garden venue for destination weddings</span>
+              <a
+              target="_blank"
+              href="https://maps.app.goo.gl/TAmCcyKi26Vi6pH98"
+              >Nidhivan garden</a>
             </div>
             <div className="flex items-center gap-3">
               <Phone className="h-4 w-4" />
-              <span>Private consultation on request</span>
+              <a
+              href="tel:+917851945466"
+              >+91 78519 45466</a>
             </div>
           </div>
         </div>

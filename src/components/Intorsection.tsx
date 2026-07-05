@@ -1,5 +1,18 @@
 import Image from "next/image";
 
+const intoDetails =[
+  {
+    title: "Garden & Outdoor Spaces",
+    imgUrl: "/images/gdn-photo1.png",
+    label: "Previous event",
+    description: "Warm lights, live music, and an intimate open-air celebration.",
+  },{
+    title: "Rooms & Suites",
+    imgUrl: "/images/room_photo1.jpeg",
+    label: "Previous event",
+    description: "luxurious rooms and suites with elegant decor, modern amenities, and serene views.",
+  }
+]
 const Introsection = () => {
   return (
     <section className="w-full px-4 py-16 md:px-6 lg:px-8 lg:py-24">
@@ -12,14 +25,14 @@ const Introsection = () => {
         </h1>
 
         <div className="mt-8 grid gap-6 md:grid-cols-2 xl:gap-8">
-          {[1, 2].map((item) => (
+          {intoDetails.map((detail, index) => (
             <article
-              key={item}
+              key={index}
               className="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#6b4b3a]/10 bg-[#fffaf0] shadow-[0_12px_30px_rgba(59,37,34,0.06)] transition-transform duration-300 hover:-translate-y-1"
             >
               <Image
-                src="/images/demo1.png"
-                alt="Wedding garden highlight"
+                src={detail.imgUrl}
+                alt={detail.title}
                 width={900}
                 height={600}
                 className="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
@@ -30,12 +43,11 @@ const Introsection = () => {
                   className="text-center py-2 text-[#3b2522]"
                   style={{ fontFamily: "var(--font-runalto)" }}
                 >
-                  Wedding Hall
+                  {detail.title}
                 </h2>
                 <p className="mt-3 text-center text-sm leading-7 tracking-wide text-gray-900">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-                  quod. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Quisquam, quod.
+                  {detail.description}
+                
                 </p>
               </div>
             </article>
